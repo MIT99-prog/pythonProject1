@@ -11,7 +11,8 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
 
-from stock import DataInfo, Stock, Graph
+from gdcloss import Graph
+from stock import DataInfo, Stock
 
 
 class Test(QWidget):
@@ -42,5 +43,5 @@ class Test(QWidget):
         st = Stock(self.di)
 
         # generate graph
-        Graph(st, self.di)
 
+        Graph(st, self.di)
