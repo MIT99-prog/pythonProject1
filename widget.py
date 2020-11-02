@@ -10,9 +10,11 @@
 # -------------------------------------------------------------------------------
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
+from numpy.distutils.fcompiler import none
 
 from gdcloss import Graph
 from stock import DataInfo, Stock
+from stockchart import StockGraph
 
 
 class Test(QWidget):
@@ -20,10 +22,13 @@ class Test(QWidget):
         QWidget.__init__(self)
         uic.loadUi('form.ui', self)
         self.di = DataInfo()
+        self.st = none
 
+        self.getDataButton.clicked.connect(self.ongetdata)
         self.graphButton.clicked.connect(self.ongButtonclicked)
+        self.candleButton.clicked.connect(self.oncandlebutton)
 
-    def ongButtonclicked(self):
+    def ongetdata(self):
 
         self.di.data_type = self.dataType.toPlainText()
         self.di.data_source = self.dataSource.toPlainText()
@@ -37,11 +42,24 @@ class Test(QWidget):
         else:
             self.di.method = 1  # temporally
 
-        print("Graph Button was clicked!")
+        self.st = Stock(self.di)
+        print("GetData is completed!")
 
-        # data set and calc average
-        st = Stock(self.di)
+    def ongButtonclicked(self):
+
+
+
 
         # generate graph
+        if self.st == none:
+            print("GetData is mandatory")
+        else:
+            Graph(self.st, self.di)
+        print("Graph Button was clicked!")
 
-        Graph(st, self.di)
+    def oncandlebutton(self):
+        if self.st == none:
+            print("GetData is mandatory")
+        else:
+            StockGraph(self.st)
+            print("CandleChart was clicked!")

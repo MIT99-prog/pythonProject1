@@ -8,11 +8,9 @@
 # Copyright:   (c) tango 2020
 # Licence:     <your licence>
 # -------------------------------------------------------------------------------
-import sys
+# import sys
 from datetime import date as dt  # datetime functions
 from datetime import timedelta as delta  # difference between two dates
-
-import numpy as np
 
 
 # from gdcloss import Graph
@@ -29,7 +27,7 @@ class Span:
 
 class DataInfo:
     def __init__(self):
-        super().__init__()
+
         self.data_type = "^N225"
         self.data_source = "yahoo"
         self.data_size = 365
@@ -123,9 +121,10 @@ class Ewm(CalcAvg):
         st.df['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
         st.df['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
 
-
+"""
 def main():
     # ask detail of the data
+
     data_type = input("取り込むデータの種類を入力してください。（日経平均は、＾N225、企業は、証券コードに.JP）")
     data_source = input("データソースを入力してください。（yahoo/stooq）")
     data_size = np.int(input("取得するデータの期間を日数で入力してください。"))
@@ -139,7 +138,7 @@ def main():
     di.method = method
 
     # data set and calc average
-    st = Stock(di)
+    #st = Stock(di)
 
     # generate graph
     # Graph(st, di)
@@ -149,3 +148,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""

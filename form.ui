@@ -159,7 +159,7 @@
   <widget class="QPushButton" name="graphButton">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>380</x>
      <y>230</y>
      <width>111</width>
      <height>41</height>
@@ -205,6 +205,32 @@ Cross</string>
    </property>
    <property name="plainText">
     <string>yahoo</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="candleButton">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>230</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CandleChart</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="getDataButton">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>230</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>getData</string>
    </property>
   </widget>
  </widget>
