@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QWidget
 from numpy.distutils.fcompiler import none
 
 from gdcloss import Graph
+from scatter import Scatter
 from stock import DataInfo, Stock
 from stockchart import StockGraph
 
@@ -25,14 +26,16 @@ class Test(QWidget):
         self.st = none
 
         self.getDataButton.clicked.connect(self.ongetdata)
-        self.graphButton.clicked.connect(self.ongButtonclicked)
+        self.graphButton.clicked.connect(self.ongraphbutton)
         self.candleButton.clicked.connect(self.oncandlebutton)
+        self.scatterButton.clicked.connect(self.onscatterbutton)
 
     def ongetdata(self):
 
         self.di.data_type = self.dataType.toPlainText()
         self.di.data_source = self.dataSource.toPlainText()
         self.di.data_size = self.di.setsize(self.duration.value())
+
         if self.sma.isChecked():
             self.di.method = 1
         elif self.wma.isChecked():
@@ -45,10 +48,7 @@ class Test(QWidget):
         self.st = Stock(self.di)
         print("GetData is completed!")
 
-    def ongButtonclicked(self):
-
-
-
+    def ongraphbutton(self):
 
         # generate graph
         if self.st == none:
@@ -63,3 +63,10 @@ class Test(QWidget):
         else:
             StockGraph(self.st)
             print("CandleChart was clicked!")
+
+    def onscatterbutton(self):
+        if self.st == none:
+            print("GetData is mandatory")
+        else:
+            Scatter(self.st)
+        print("Scatter Button was clicked!")
