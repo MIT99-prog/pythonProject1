@@ -40,7 +40,8 @@ class Scatter:
             plt.plot(self.x.values[:, i], self.z, '-', label="R_" + labels[i])
 
             # Set Attributes
-            plt.title("Scatter Graph", loc='Left')
+            plt.title("a= " + str(ra.a[i]) + " b= " + str(ra.b[i]) + " s= " + str(ra.s[i]),
+                      loc='Left')
             plt.xlabel("Price")
             plt.ylabel("Volume")
             plt.grid(True)
