@@ -16,18 +16,8 @@ from datetime import timedelta as delta  # difference between two dates
 # from gdcloss import Graph
 
 
-class Span:
-
-    def __init__(self):
-        # super().__init__()
-        self.span01 = 5
-        self.span02 = 25
-        self.span03 = 50
-
-
 class DataInfo:
     def __init__(self):
-
         self.data_type = "^N225"
         self.data_source = "yahoo"
         self.data_size = 365
@@ -48,7 +38,7 @@ class Stock:
     def __init__(self, di: DataInfo):
         self.df = None
         self.data_read(di)
-        self.setavg(di)
+        # self.setavg(di)
 
     def data_read(self, di):  # import row data from internet
 
@@ -61,65 +51,6 @@ class Stock:
         # sort by index
         self.df = self.df.sort_index()
 
-    def setavg(self, di):
-        md = di.method
-        if md == 1:
-            calc = Sma(self, di)
-        elif md == 2:
-            calc = Wma(self, di)
-        elif md == 3:
-            calc = Ewm(self, di)
-        else:
-            calc = Sma(self, di)
-            print("Calc Method Error. Calc with Sma.")
-
-        calc.calcavg(self)
-
-
-class CalcAvg:
-    def __init__(self, st: Stock, di: DataInfo):
-        self.sp = Span()
-        self.price = []
-
-        if di.data_source == "yahoo":
-            self.price = st.df['Adj Close']  # from yahoo
-        elif di.data_source == "stooq":
-            self.price = st.df['Close']  # from stooq
-        else:
-            self.price = st.df['Close']  # temporally
-
-
-class Sma(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
-
-    def calcavg(self, st: Stock):
-        # Simple Moving Average
-        st.df['avg05days'] = self.price.rolling(window=self.sp.span01).mean()
-        st.df['avg25days'] = self.price.rolling(window=self.sp.span02).mean()
-        st.df['avg50days'] = self.price.rolling(window=self.sp.span03).mean()
-
-
-class Wma(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
-
-    def calcavg(self, st):
-        # waited moving average
-        st.df['avg05days'] = self.price.rolling(window=self.sp.span01, center=False, win_type='triang').mean()
-        st.df['avg25days'] = self.price.rolling(window=self.sp.span02, center=False, win_type='triang').mean()
-        st.df['avg50days'] = self.price.rolling(window=self.sp.span03, center=False, win_type='triang').mean()
-
-
-class Ewm(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
-
-    def calcavg(self, st):
-        # Exponential smoothing moving average
-        st.df['avg05days'] = self.price.ewm(span=self.sp.span01).mean()
-        st.df['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
-        st.df['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
 
 """
 def main():
