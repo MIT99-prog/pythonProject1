@@ -9,6 +9,7 @@
 # Licence:     <your licence>
 # -------------------------------------------------------------------------------
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from stock import Stock, DataInfo
 
@@ -26,6 +27,7 @@ class CalcAvg:
     def __init__(self, st: Stock, di: DataInfo):
         self.sp = Span()
         self.price = []
+        self.average = pd.DataFrame()
 
         if di.data_source == "yahoo":
             self.price = st.df['Adj Close']  # from yahoo
@@ -39,33 +41,33 @@ class Sma(CalcAvg):
     def __init__(self, st: Stock, di: DataInfo):
         super().__init__(st, di)
 
-    def calcavg(self, st: Stock):
+    def calcavg(self):
         # Simple Moving Average
-        st.df['avg05days'] = self.price.rolling(window=self.sp.span01).mean()
-        st.df['avg25days'] = self.price.rolling(window=self.sp.span02).mean()
-        st.df['avg50days'] = self.price.rolling(window=self.sp.span03).mean()
+        self.average['avg05days'] = self.price.rolling(window=self.sp.span01).mean()
+        self.average['avg25days'] = self.price.rolling(window=self.sp.span02).mean()
+        self.average['avg50days'] = self.price.rolling(window=self.sp.span03).mean()
 
 
 class Wma(CalcAvg):
     def __init__(self, st: Stock, di: DataInfo):
         super().__init__(st, di)
 
-    def calcavg(self, st):
+    def calcavg(self):
         # waited moving average
-        st.df['avg05days'] = self.price.rolling(window=self.sp.span01, center=False, win_type='triang').mean()
-        st.df['avg25days'] = self.price.rolling(window=self.sp.span02, center=False, win_type='triang').mean()
-        st.df['avg50days'] = self.price.rolling(window=self.sp.span03, center=False, win_type='triang').mean()
+        self.average['avg05days'] = self.price.rolling(window=self.sp.span01, center=False, win_type='triang').mean()
+        self.average['avg25days'] = self.price.rolling(window=self.sp.span02, center=False, win_type='triang').mean()
+        self.average['avg50days'] = self.price.rolling(window=self.sp.span03, center=False, win_type='triang').mean()
 
 
 class Ewm(CalcAvg):
     def __init__(self, st: Stock, di: DataInfo):
         super().__init__(st, di)
 
-    def calcavg(self, st):
+    def calcavg(self):
         # Exponential smoothing moving average
-        st.df['avg05days'] = self.price.ewm(span=self.sp.span01).mean()
-        st.df['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
-        st.df['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
+        self.average['avg05days'] = self.price.ewm(span=self.sp.span01).mean()
+        self.average['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
+        self.average['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
 
 
 class Graph:
@@ -76,6 +78,7 @@ class Graph:
         self.avg02 = []
         self.avg03 = []
         self.volume = []
+        self.calc = CalcAvg(st, di)
 
         self.setavg(st, di)
         self.generate_graph(st, di)
@@ -83,16 +86,16 @@ class Graph:
     def setavg(self, st, di):
         md = di.method
         if md == 1:
-            calc = Sma(st, di)
+            self.calc = Sma(st, di)
         elif md == 2:
-            calc = Wma(st, di)
+            self.calc = Wma(st, di)
         elif md == 3:
-            calc = Ewm(st, di)
+            self.calc = Ewm(st, di)
         else:
-            calc = Sma(st, di)
+            self.calc = Sma(st, di)
             print("Calc Method Error. Calc with Sma.")
 
-        calc.calcavg(st)
+        self.calc.calcavg()
 
     def generate_graph(self, st, di):
         self.date = st.df.index
@@ -106,9 +109,9 @@ class Graph:
             self.price = st.df['Close']  # other
 
         # set values for the graph
-        self.avg01 = st.df['avg05days']
-        self.avg02 = st.df['avg25days']
-        self.avg03 = st.df['avg50days']
+        self.avg01 = self.calc.average['avg05days']
+        self.avg02 = self.calc.average['avg25days']
+        self.avg03 = self.calc.average['avg50days']
 
         self.volume = st.df['Volume']
 
@@ -137,4 +140,4 @@ class Graph:
         plt.legend()
 
         # display
-        plt.show()
+        plt.show(block=True)

@@ -19,6 +19,7 @@ class Scatter:
     def __init__(self, st: Stock):
         self.x = pd.DataFrame()
 
+        self.x.index.append(st.df.index)
         self.x.insert(loc=0, column="Open", value=st.df['Open'])
         self.x.insert(loc=1, column="Close", value=st.df['Close'])
         self.x.insert(loc=2, column="High", value=st.df['High'])
