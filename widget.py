@@ -36,6 +36,14 @@ class Test(QWidget):
         self.di.data_source = self.dataSource.toPlainText()
         self.di.data_size = self.di.setsize(self.duration.value())
 
+
+
+        self.st = Stock(self.di)
+        print("GetData is completed!")
+
+    def ongraphbutton(self):
+
+        # Select Average Method
         if self.sma.isChecked():
             self.di.method = 1
         elif self.wma.isChecked():
@@ -45,17 +53,12 @@ class Test(QWidget):
         else:
             self.di.method = 1  # temporally
 
-        self.st = Stock(self.di)
-        print("GetData is completed!")
-
-    def ongraphbutton(self):
-
         # generate graph
         if self.st == none:
             print("GetData is mandatory")
         else:
             Graph(self.st, self.di)
-        print("Graph Button was clicked!")
+        print("GDCross Button was clicked!")
 
     def oncandlebutton(self):
         if self.st == none:

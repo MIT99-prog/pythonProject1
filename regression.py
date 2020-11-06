@@ -33,12 +33,12 @@ class RegAnalysis:
         # Multi-Regression Analysis
         for i in range(4):
             self.x = st.df.loc[:, [column_name[i]]].values
-            # self.clf.fit(self.x.astype, self.y)
-            self.clf.fit(self.x.astype(np.float32), self.y)  # the problem of sitkit-learn?
+            # self.clf.fit(self.x, self.y)
+            self.clf.fit(self.x.astype(np.float32), self.y)  # the problem of scikit-learn?
             # try:
-                # self.clf.fit(self.x.astype(np.float32), self.y)
+            # self.clf.fit(self.x.astype(np.float32), self.y)
             # except:
-                # self.clf.fit(self.x.astype(np.float32), self.y)
+            # self.clf.fit(self.x.astype(np.float32), self.y)
 
             self.a.append(self.clf.coef_)
             self.b.append(self.clf.intercept_)
