@@ -8,6 +8,7 @@
 # Copyright:   (c) tango 2020
 # Licence:     <your licence>
 # -------------------------------------------------------------------------------
+import numpy as np
 import pandas as pd
 from sklearn import linear_model
 
@@ -15,9 +16,10 @@ from stock import Stock
 
 
 class RegAnalysis:
-    def __init__(self, st: Stock) -> object:
-        self.clf = linear_model.LinearRegression()
+    def __init__(self, st: Stock):
+        # self.clf = linear_model.LinearRegression(fit_intercept=True, normalize=True, copy_X=True, n_jobs=None)
         # self.x = st.df.loc[:, ['Open']].values
+        self.clf = linear_model.LinearRegression()
         self.x = pd.DataFrame()
         self.y = st.df['Volume']
         self.a = []
@@ -31,7 +33,12 @@ class RegAnalysis:
         # Multi-Regression Analysis
         for i in range(4):
             self.x = st.df.loc[:, [column_name[i]]].values
-            self.clf.fit(self.x, self.y)
+            # self.clf.fit(self.x.astype, self.y)
+            self.clf.fit(self.x.astype(np.float32), self.y)  # the problem of sitkit-learn?
+            # try:
+                # self.clf.fit(self.x.astype(np.float32), self.y)
+            # except:
+                # self.clf.fit(self.x.astype(np.float32), self.y)
 
             self.a.append(self.clf.coef_)
             self.b.append(self.clf.intercept_)

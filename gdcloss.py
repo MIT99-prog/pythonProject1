@@ -116,28 +116,28 @@ class Graph:
         self.volume = st.df['Volume']
 
         # plot data
-        plt.figure(figsize=(20, 10))
-        plt.subplot(2, 1, 1)
+        fig, axes = plt.subplots(2, 1, figsize=(20, 12))
+        # plt.subplot(2, 1, 1)
 
-        plt.title("Stock Price Chart " + di.data_type + " - " + str(di.method), loc='left')
-        plt.xlabel('Date')
-        plt.ylabel('Price (JPY)')
+        axes[0].set_title("Stock Price Chart " + di.data_type + " - " + str(di.method), loc='left')
+        axes[0].set_xlabel('Date')
+        axes[0].set_ylabel('Price (JPY)')
 
         # plot price data
-        plt.plot(self.date, self.price, label='Price', color='pink')
-        plt.plot(self.date, self.avg01, label='Avg05days', color='blue')
-        plt.plot(self.date, self.avg02, label='Avg25days', color='green')
-        plt.plot(self.date, self.avg03, label='Avg50days', color='purple')
+        axes[0].plot(self.date, self.price, label='Price', color='pink')
+        axes[0].plot(self.date, self.avg01, label='Avg05days', color='blue')
+        axes[0].plot(self.date, self.avg02, label='Avg25days', color='green')
+        axes[0].plot(self.date, self.avg03, label='Avg50days', color='purple')
 
-        plt.legend()
+        axes[0].legend()
 
-        plt.subplot(2, 1, 2)
-        plt.title('Stock Volume Chart', loc='left')
-        plt.xlabel('Date')
-        plt.ylabel('Volume (Unit)')
+        # plt.subplot(2, 1, 2)
+        axes[1].set_title('Stock Volume Chart', loc='left')
+        axes[1].set_xlabel('Date')
+        axes[1].set_ylabel('Volume (Unit)')
 
-        plt.bar(self.date, self.volume, label='Volume', color='grey')
-        plt.legend()
+        axes[1].bar(self.date, self.volume, label='Volume', color='grey')
+        axes[1].legend()
 
         # display
-        plt.show(block=True)
+        plt.show()
