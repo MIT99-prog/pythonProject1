@@ -12,6 +12,8 @@
 from datetime import date as dt  # datetime functions
 from datetime import timedelta as delta  # difference between two dates
 
+import pandas as pd
+
 
 # from gdcloss import Graph
 
@@ -23,7 +25,7 @@ class DataInfo:
         self.data_size = 365
         self.start = dt.today()
         self.end = dt.today()
-        self.method = 1
+        self.method = ""
 
     def calcstart(self):
         differ = delta(days=self.data_size)
@@ -36,17 +38,19 @@ class DataInfo:
 
 class Stock:
     def __init__(self, di: DataInfo):
-        self.df = None
-        self.data_read(di)
-        # self.setavg(di)
 
-    def data_read(self, di):  # import row data from internet
+        self.df = pd.DataFrame()
+        self.avg = pd.DataFrame()
+        self.di = di
+        # self.data_read()
+
+    def data_read(self):  # import row data from internet
 
         # import packages
         from pandas_datareader import data  # Stock data
 
         # set stock data from internet to dataframe
-        self.df = data.DataReader(di.data_type, di.data_source, di.start, di.end)
+        self.df = data.DataReader(self.di.data_type, self.di.data_source, self.di.start, self.di.end)
 
         # sort by index
         self.df = self.df.sort_index()

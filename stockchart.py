@@ -18,7 +18,7 @@ from stock import Stock
 class StockGraph:
     def __init__(self, st: Stock):
 
-        mpf.plot(st.df, type='candle', mav=(5, 25, 50))
+        mpf.plot(st.df, type='candle', mav=(5, 25, 50), volume=True, figratio=(20, 10))
 
 
 

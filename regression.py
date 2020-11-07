@@ -30,7 +30,7 @@ class RegAnalysis:
 
     def execanalysis(self, st: Stock):
         column_name = ['Open', 'Close', 'High', 'Low']
-        # Multi-Regression Analysis
+        # Linear-Regression Analysis
         for i in range(4):
             self.x = st.df.loc[:, [column_name[i]]].values
             # self.clf.fit(self.x, self.y)

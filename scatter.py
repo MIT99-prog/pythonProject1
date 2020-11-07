@@ -33,18 +33,23 @@ class Scatter:
 
         # Generate Regression Data
         labels = ['Open', 'Close', 'High', 'Low']
-        for i in range(4):
+        fig, axes = plt.subplots(2, 2, figsize=(12, 8), sharex=True, sharey=True)
+        one_dimension_axes = axes.ravel()
+
+        for i, axes in enumerate(one_dimension_axes):
             self.val.insert(i, 'R-' + labels[i], self.x.values[:, i] * ra.a[i] + ra.b[i])
             self.z = self.val.values[:, i]
-            plt.subplot(2, 2, i+1)
-            plt.plot(self.x.values[:, i], self.y, 'o', label=labels[i])
-            plt.plot(self.x.values[:, i], self.z, '-', label="R_" + labels[i])
+            # plt.subplot(2, 2, i+1)
+            axes.plot(self.x.values[:, i], self.y, 'o', label=labels[i])
+            axes.plot(self.x.values[:, i], self.z, '-', label="R_" + labels[i])
 
             # Set Attributes
-            plt.title("a= " + str(ra.a[i]) + " b= " + str(ra.b[i]) + " s= " + str(ra.s[i]),
+            axes.set_title("a= " + str(ra.a[i]) + " b= " + str(ra.b[i]) + " s= " + str(ra.s[i]),
                       loc='Left')
-            plt.xlabel("Price")
-            plt.ylabel("Volume")
-            plt.grid(True)
-            plt.legend()
+            axes.set_xlabel("Price")
+            axes.set_ylabel("Volume")
+            axes.grid(True)
+            axes.legend()
+
+        # plt.tight_layout()
         plt.show()

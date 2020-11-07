@@ -10,8 +10,9 @@
 # -------------------------------------------------------------------------------
 import matplotlib.pyplot as plt
 import pandas as pd
+from numpy.distutils.fcompiler import none
 
-from stock import Stock, DataInfo
+from stock import Stock
 
 
 class Span:
@@ -24,102 +25,102 @@ class Span:
 
 
 class CalcAvg:
-    def __init__(self, st: Stock, di: DataInfo):
+    def __init__(self, st: Stock):
         self.sp = Span()
         self.price = []
         self.average = pd.DataFrame()
 
-        if di.data_source == "yahoo":
+        if st.di.data_source == "yahoo":
             self.price = st.df['Adj Close']  # from yahoo
-        elif di.data_source == "stooq":
+        elif st.di.data_source == "stooq":
             self.price = st.df['Close']  # from stooq
         else:
             self.price = st.df['Close']  # temporally
 
 
 class Sma(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
+    def __init__(self, st: Stock):
+        super().__init__(st)
 
-    def calcavg(self):
+    def calcavg(self, st):
         # Simple Moving Average
-        self.average['avg05days'] = self.price.rolling(window=self.sp.span01).mean()
-        self.average['avg25days'] = self.price.rolling(window=self.sp.span02).mean()
-        self.average['avg50days'] = self.price.rolling(window=self.sp.span03).mean()
+        st.avg['avg05days'] = self.price.rolling(window=self.sp.span01).mean()
+        st.avg['avg25days'] = self.price.rolling(window=self.sp.span02).mean()
+        st.avg['avg50days'] = self.price.rolling(window=self.sp.span03).mean()
 
 
 class Wma(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
+    def __init__(self, st: Stock):
+        super().__init__(st)
 
-    def calcavg(self):
+    def calcavg(self, st):
         # waited moving average
-        self.average['avg05days'] = self.price.rolling(window=self.sp.span01, center=False, win_type='triang').mean()
-        self.average['avg25days'] = self.price.rolling(window=self.sp.span02, center=False, win_type='triang').mean()
-        self.average['avg50days'] = self.price.rolling(window=self.sp.span03, center=False, win_type='triang').mean()
+        st.avg['avg05days'] = self.price.rolling(window=self.sp.span01, center=False, win_type='triang').mean()
+        st.avg['avg25days'] = self.price.rolling(window=self.sp.span02, center=False, win_type='triang').mean()
+        st.avg['avg50days'] = self.price.rolling(window=self.sp.span03, center=False, win_type='triang').mean()
 
 
 class Ewm(CalcAvg):
-    def __init__(self, st: Stock, di: DataInfo):
-        super().__init__(st, di)
+    def __init__(self, st: Stock):
+        super().__init__(st)
 
-    def calcavg(self):
+    def calcavg(self, st):
         # Exponential smoothing moving average
-        self.average['avg05days'] = self.price.ewm(span=self.sp.span01).mean()
-        self.average['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
-        self.average['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
+        st.avg['avg05days'] = self.price.ewm(span=self.sp.span01).mean()
+        st.avg['avg25days'] = self.price.ewm(span=self.sp.span02).mean()
+        st.avg['avg50days'] = self.price.ewm(span=self.sp.span03).mean()
 
 
 class Graph:
-    def __init__(self, st: Stock, di: DataInfo):
+    def __init__(self, st: Stock):
         self.date = []
         self.price = []
         self.avg01 = []
         self.avg02 = []
         self.avg03 = []
         self.volume = []
-        self.calc = CalcAvg(st, di)
+        self.calc = none
 
-        self.setavg(st, di)
-        self.generate_graph(st, di)
+        self.setavg(st)
+        self.generate_graph(st)
 
-    def setavg(self, st, di):
-        md = di.method
-        if md == 1:
-            self.calc = Sma(st, di)
-        elif md == 2:
-            self.calc = Wma(st, di)
-        elif md == 3:
-            self.calc = Ewm(st, di)
+    def setavg(self, st):
+        md = st.di.method
+        if md == "sma":
+            self.calc = Sma(st)
+        elif md == "wma":
+            self.calc = Wma(st)
+        elif md == "ewm":
+            self.calc = Ewm(st)
         else:
-            self.calc = Sma(st, di)
+            self.calc = Sma(st)
             print("Calc Method Error. Calc with Sma.")
 
-        self.calc.calcavg()
+        self.calc.calcavg(st)
 
-    def generate_graph(self, st, di):
+    def generate_graph(self, st):
         self.date = st.df.index
         # set analysis values
         # set analysis values
-        if di.data_source == "yahoo":
+        if st.di.data_source == "yahoo":
             self.price = st.df['Adj Close']  # from yahoo
-        elif di.data_source == "stooq":
+        elif st.di.data_source == "stooq":
             self.price = st.df['Close']  # from stooq
         else:
             self.price = st.df['Close']  # other
 
         # set values for the graph
-        self.avg01 = self.calc.average['avg05days']
-        self.avg02 = self.calc.average['avg25days']
-        self.avg03 = self.calc.average['avg50days']
+        self.avg01 = st.avg['avg05days']
+        self.avg02 = st.avg['avg25days']
+        self.avg03 = st.avg['avg50days']
 
         self.volume = st.df['Volume']
 
         # plot data
-        fig, axes = plt.subplots(2, 1, figsize=(20, 12))
+        fig, axes = plt.subplots(2, 1, figsize=(20, 12), sharex=True)
         # plt.subplot(2, 1, 1)
 
-        axes[0].set_title("Stock Price Chart " + di.data_type + " - " + str(di.method), loc='left')
+        axes[0].set_title("Stock Price Chart " + st.di.data_type + " - " + st.di.method)
         axes[0].set_xlabel('Date')
         axes[0].set_ylabel('Price (JPY)')
 
@@ -132,7 +133,7 @@ class Graph:
         axes[0].legend()
 
         # plt.subplot(2, 1, 2)
-        axes[1].set_title('Stock Volume Chart', loc='left')
+        axes[1].set_title('Stock Volume Chart')
         axes[1].set_xlabel('Date')
         axes[1].set_ylabel('Volume (Unit)')
 

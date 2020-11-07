@@ -22,42 +22,41 @@ class Test(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         uic.loadUi('form.ui', self)
-        self.di = DataInfo()
-        self.st = none
+        self.wdi = DataInfo()
+        self.st = Stock(self.wdi)
 
         self.getDataButton.clicked.connect(self.ongetdata)
-        self.graphButton.clicked.connect(self.ongraphbutton)
+        self.graphButton.clicked.connect(self.ongdbutton)
         self.candleButton.clicked.connect(self.oncandlebutton)
         self.scatterButton.clicked.connect(self.onscatterbutton)
 
     def ongetdata(self):
 
-        self.di.data_type = self.dataType.toPlainText()
-        self.di.data_source = self.dataSource.toPlainText()
-        self.di.data_size = self.di.setsize(self.duration.value())
+        self.st.di.data_type = self.dataType.toPlainText()
+        self.st.di.data_source = self.dataSource.toPlainText()
+        self.st.di.setsize(self.duration.value())
 
-
-
-        self.st = Stock(self.di)
+        self.st.data_read()
         print("GetData is completed!")
 
-    def ongraphbutton(self):
+    def ongdbutton(self):
 
         # Select Average Method
         if self.sma.isChecked():
-            self.di.method = 1
+            self.wdi.method = "sma"
         elif self.wma.isChecked():
-            self.di.method = 2
+            self.wdi.method = "wma"
         elif self.ewm.isChecked():
-            self.di.method = 3
+            self.wdi.method = "ewm"
         else:
-            self.di.method = 1  # temporally
+            self.wdi.method = "sma"  # temporally
 
         # generate graph
         if self.st == none:
             print("GetData is mandatory")
         else:
-            Graph(self.st, self.di)
+            self.st.di.method = self.wdi.method
+            Graph(self.st)
         print("GDCross Button was clicked!")
 
     def oncandlebutton(self):
