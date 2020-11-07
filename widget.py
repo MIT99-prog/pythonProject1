@@ -10,7 +10,6 @@
 # -------------------------------------------------------------------------------
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
-from numpy.distutils.fcompiler import none
 
 from gdcloss import Graph
 from scatter import Scatter
@@ -37,37 +36,43 @@ class Test(QWidget):
         self.st.di.setsize(self.duration.value())
 
         self.st.data_read()
-        print("GetData is completed!")
+        number_record = self.st.df.shape[0]
+        self.msgText.setText("データが " + str(number_record) + "件　取得できました！")
+
+        print("GetData process is completed!")
 
     def ongdbutton(self):
 
-        # Select Average Method
-        if self.sma.isChecked():
-            self.wdi.method = "sma"
-        elif self.wma.isChecked():
-            self.wdi.method = "wma"
-        elif self.ewm.isChecked():
-            self.wdi.method = "ewm"
-        else:
-            self.wdi.method = "sma"  # temporally
-
-        # generate graph
-        if self.st == none:
+        # Check Stock Data
+        if self.st.df.shape[0] == 0:
+            self.msgText.setText("先にデータを取得してください。")
             print("GetData is mandatory")
         else:
+            # Select Average Method
+            if self.sma.isChecked():
+                self.wdi.method = "sma"
+            elif self.wma.isChecked():
+                self.wdi.method = "wma"
+            elif self.ewm.isChecked():
+                self.wdi.method = "ewm"
             self.st.di.method = self.wdi.method
+
+            # Generate Graph
             Graph(self.st)
+
         print("GDCross Button was clicked!")
 
     def oncandlebutton(self):
-        if self.st == none:
+        if self.st.df.shape[0] == 0:
+            self.msgText.setText("先にデータを取得してください。")
             print("GetData is mandatory")
         else:
             StockGraph(self.st)
             print("CandleChart was clicked!")
 
     def onscatterbutton(self):
-        if self.st == none:
+        if self.st.df.shape[0] == 0:
+            self.msgText.setText("先にデータを取得してください。")
             print("GetData is mandatory")
         else:
             Scatter(self.st)

@@ -21,8 +21,14 @@ class Test(QWidget):
 """
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = Test()
-    widget.show()
+    try:
+        app = QApplication(sys.argv)
+        # Display Widget
+        widget = Test()
+        widget.show()
 
-    sys.exit(app.exec_())
+    except:
+        print("Exception occurred!")
+    else:
+        # print("Process was finished without exception!")
+        sys.exit(app.exec_())
