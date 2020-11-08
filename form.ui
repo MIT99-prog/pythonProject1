@@ -236,8 +236,8 @@ Cross</string>
   <widget class="QPushButton" name="scatterButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>360</y>
+     <x>270</x>
+     <y>310</y>
      <width>101</width>
      <height>41</height>
     </rect>
@@ -257,6 +257,20 @@ Cross</string>
    </property>
    <property name="readOnly">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="kmButton">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>360</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>K-Means
+Clustaring</string>
    </property>
   </widget>
  </widget>

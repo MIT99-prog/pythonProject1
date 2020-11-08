@@ -12,6 +12,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
 
 from gdcloss import Graph
+from kmeans import KMAnalysis
 from scatter import Scatter
 from stock import DataInfo, Stock
 from stockchart import StockGraph
@@ -28,6 +29,7 @@ class Test(QWidget):
         self.graphButton.clicked.connect(self.ongdbutton)
         self.candleButton.clicked.connect(self.oncandlebutton)
         self.scatterButton.clicked.connect(self.onscatterbutton)
+        self.kmButton.clicked.connect(self.onkmbutton)
 
     def ongetdata(self):
 
@@ -77,3 +79,11 @@ class Test(QWidget):
         else:
             Scatter(self.st)
         print("Scatter Button was clicked!")
+
+    def onkmbutton(self):
+        if self.st.df.shape[0] == 0:
+            self.msgText.setText("先にデータを取得してください。")
+            print("GetData is mandatory")
+        else:
+            KMAnalysis(self.st)
+        print("K-means Button was clicked!")

@@ -42,6 +42,7 @@ class Stock:
         self.df = pd.DataFrame()
         self.avg = pd.DataFrame()
         self.di = di
+        self.km = pd.Series()
         # self.data_read()
 
     def data_read(self):  # import row data from internet
