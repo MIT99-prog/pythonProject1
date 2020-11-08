@@ -125,7 +125,7 @@ class Graph:
         axes[0].set_ylabel('Price (JPY)')
 
         # plot price data
-        axes[0].plot(self.date, self.price, label='Price', color='pink')
+        axes[0].plot(self.date, self.price, label='Price', color='Red')
         axes[0].plot(self.date, self.avg01, label='Avg05days', color='blue')
         axes[0].plot(self.date, self.avg02, label='Avg25days', color='green')
         axes[0].plot(self.date, self.avg03, label='Avg50days', color='purple')
