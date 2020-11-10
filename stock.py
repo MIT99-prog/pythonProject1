@@ -41,9 +41,11 @@ class Stock:
 
         self.df = pd.DataFrame()
         self.avg = pd.DataFrame()
+        self.chg = pd.DataFrame()
         self.di = di
         self.km = pd.Series()
-        # self.data_read()
+
+
 
     def data_read(self):  # import row data from internet
 
@@ -53,8 +55,10 @@ class Stock:
         # set stock data from internet to dataframe
         self.df = data.DataReader(self.di.data_type, self.di.data_source, self.di.start, self.di.end)
 
-        # sort by index
-        self.df = self.df.sort_index()
+        # post process
+        self.df = self.df.sort_index()  # data sort
+        # self.change_rate()  # Calc change rate
+
 
 
 """
