@@ -8,6 +8,9 @@
 # Copyright:   (c) tango 2020
 # Licence:     <your licence>
 # -------------------------------------------------------------------------------
+from datetime import date as dt  # datetime functions
+from datetime import timedelta as delta  # difference between two dates
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
 
@@ -25,18 +28,29 @@ class Test(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         # Set initial data for these QComboBoxes of the widget
+        # Start Date and End Date for Get Data
+        end_date = dt.today()
+        differ = delta(days=365)
+        start_date = end_date - differ
+
+        # metric and method for Clustering
         metricItems = ['braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'euclidean', 'hamming',
                   'jaccard']
         methodItems = ['single', 'average', 'complete', 'weighted']
 
         # Load form file(.ui)
         uic.loadUi('form.ui', self)
+        # Set start and end date to QDateEdit
+        self.startDate.setDate(start_date)
+        self.endDate.setDate(end_date)
 
-        #Set items to these QComboBoxes
+        # Set items to these QComboBoxes
         for i in range(9):
             self.metric.addItem(metricItems[i])
+
         for i in range(4):
             self.method.addItem(methodItems[i])
+
         # construct DataInfo, Stock Classes
         self.wdi = DataInfo()
         self.st = Stock(self.wdi)
@@ -52,10 +66,14 @@ class Test(QWidget):
         self.changeButton.clicked.connect(self.onchangebutton)
 
     def ongetdata(self):
-
+        # Get info from screen widget
         self.st.di.data_type = self.dataType.toPlainText()
         self.st.di.data_source = self.dataSource.toPlainText()
-        self.st.di.setsize(self.duration.value())
+        tuple_start = self.startDate.date().getDate()
+        tuple_end = self.endDate.date().getDate()
+        self.st.di.start = dt(tuple_start[0], tuple_start[1], tuple_start[2])
+        self.st.di.end = dt(tuple_end[0], tuple_end[1], tuple_end[2])
+        # self.st.di.setsize(self.duration.value())
 
         self.st.data_read()
         number_record = self.st.df.shape[0]
