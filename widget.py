@@ -34,9 +34,9 @@ class Test(QWidget):
         start_date = end_date - differ
 
         # metric and method for Clustering
-        metricItems = ['braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'euclidean', 'hamming',
-                  'jaccard']
-        methodItems = ['single', 'average', 'complete', 'weighted']
+        metric_items = ['braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'euclidean',
+                        'hamming', 'jaccard']
+        method_items = ['single', 'average', 'complete', 'weighted']
 
         # Load form file(.ui)
         uic.loadUi('form.ui', self)
@@ -46,10 +46,10 @@ class Test(QWidget):
 
         # Set items to these QComboBoxes
         for i in range(9):
-            self.metric.addItem(metricItems[i])
+            self.metric.addItem(metric_items[i])
 
         for i in range(4):
-            self.method.addItem(methodItems[i])
+            self.method.addItem(method_items[i])
 
         # construct DataInfo, Stock Classes
         self.wdi = DataInfo()
@@ -74,8 +74,14 @@ class Test(QWidget):
         self.st.di.start = dt(tuple_start[0], tuple_start[1], tuple_start[2])
         self.st.di.end = dt(tuple_end[0], tuple_end[1], tuple_end[2])
         # self.st.di.setsize(self.duration.value())
+        self.st.di.span1 = int(self.span1.value())
+        self.st.di.span2 = int(self.span2.value())
+        self.st.di.span3 = int(self.span3.value())
 
+        # Stock Data from internet
         self.st.data_read()
+
+        # Post process
         number_record = self.st.df.shape[0]
         self.msgText.setText("データが " + str(number_record) + "件　取得できました！")
 
@@ -149,10 +155,10 @@ class Test(QWidget):
             self.msgText.setText("先にデータを取得してください。")
             print("GetData is mandatory")
         else:
-            selectMetric = self.metric.currentText()
-            selectMethod = self.method.currentText()
+            select_metric = self.metric.currentText()
+            select_method = self.method.currentText()
             cls2 = Cluster()
-            cls2.disply_graph(st=self.st, metric=selectMetric, method=selectMethod)
+            cls2.disply_graph(st=self.st, metric=select_metric, method=select_method)
 
         print("Cluster Button was clicked!")
 

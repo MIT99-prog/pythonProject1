@@ -19,9 +19,7 @@ from stock import Stock
 
 class ChangeRate:
     def __init__(self, st: Stock):
-        # Calc Change of Rate in the day
-        st.chg['Change'] = st.df['Close'] - st.df['Open']
-        st.chg['ChgRate'] = (st.chg['Change'] / st.df['Open']) * 100  # percentage
+
 
         self.plot_change_values(st)
 
@@ -36,7 +34,8 @@ class ChangeRate:
         y_2 = st.chg['Change']
         nb = cm.log(st.df.shape[0], 2)
         # n2 = cm.log10(st.df.shape[0]) / cm.log10(2)
-        bins = 1 + int(nb.real)
+        # bins = 1 + int(nb.real)
+        bins = (1 + int(nb.real)) * 2
         y_2_mu = y_2.mean()  # Mean
         y_2_sigma = y_2.std()  # Standard Deviation
 
@@ -52,7 +51,7 @@ class ChangeRate:
 
         # Value / Date (2)
         ax = fig.add_subplot(gs[1, 0])
-        ax.bar(x, y_2, label='Change Value', color='g')
+        ax.bar(x, y_2, label='Change Value', color='b')
         ax.set_title('Change Value by Date')
         ax.set_xlabel('Date')
         ax.set_ylabel('Change Value')
@@ -68,7 +67,7 @@ class ChangeRate:
         ax.plot(bins, y, '--')
         ax.set_title('Histogram of Change Value')
         ax.set_xlabel('Value mu= ' + str(y_2_mu) + ' / sigma= ' + str(y_2_sigma))
-        ax.set_ylabel('Number of Days')
+        ax.set_ylabel('Percentage')
         ax.grid(True)
 
         fig.legend()
